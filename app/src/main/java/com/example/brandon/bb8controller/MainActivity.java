@@ -48,8 +48,9 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(this,50);
                 lock.readLock().lock();
                 try{
-                    bluetoothHandler.write(Integer.toString(horizontal_joystick_data));
-                    bluetoothHandler.write(Integer.toString(vertical_joystick_data));
+                    //Convert to integer, pad with leading 0's if necessary to ensure a constant number of characters is being sent each time
+                    bluetoothHandler.write(String.format("%03d", horizontal_joystick_data));
+                    bluetoothHandler.write(String.format("%03d", vertical_joystick_data));
                 } finally {
                     lock.readLock().unlock();
                 }
@@ -86,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else if(angle==180)
                     {
-                        horizontal_joystick_data = -strength;
-                    }
+                        horizontal_joystick_data = strength+100; //TODO: Refactor to send negative numbers
+                    }                                            //TODO: Need to send constant width regardless of negative sign
                     else
                     {
                         horizontal_joystick_data = 0;
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else if(angle==270)
                     {
-                        vertical_joystick_data = -strength;
+                        vertical_joystick_data = strength+100;  //TODO: Same as above
                     }
                     else
                     {
